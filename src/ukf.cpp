@@ -82,10 +82,10 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	  x_(4)=0;
 	}
 	
-	P_ << 1, 0, 0, 0,0
-			  0, 1, 0, 0,0
-			  0, 0, 10, 0,0
-			  0, 0, 0, 10,0
+	P_ << 1, 0, 0, 0, 0,
+			  0, 1, 0, 0, 0,
+			  0, 0, 10, 0, 0,
+			  0, 0, 0, 10, 0,
 			  0,0,0,0,10;
 			  
 	previous_timestamp_=meas_package.timestamp_;
@@ -131,8 +131,7 @@ void UKF::Prediction(double delta_t) {
   Xsig_aug.fill(0.0);
   //create augmented sigma points
   Xsig_aug.col(0)  = x_aug;
-  for (int i = 0; i< n_aug_; i++)
-  {
+  for (int i = 0; i< n_aug_; i++){
     Xsig_aug.col(i+1)       = x_aug + sqrt(lambda_+n_aug_) * L.col(i);
     Xsig_aug.col(i+1+n_aug_) = x_aug - sqrt(lambda_+n_aug_) * L.col(i);
   }
