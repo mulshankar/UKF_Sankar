@@ -64,48 +64,47 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   /*****************************************************************************
    *  Initialization
    ****************************************************************************/
-  if (!is_initialized_) 
-	{
-		// first measurement
-		cout << "UKF: " << endl;
-		if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-		  x_(0)=measurement_pack.raw_measurements_[0]*cos(measurement_pack.raw_measurements_[1]);
-		  x_(1)=measurement_pack.raw_measurements_[0]*sin(measurement_pack.raw_measurements_[1]);
-		  x_(2)=0;
-		  x_(3)=0;
-		  x_(4)=0;
-		}
-		else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
-		  x_(0)=measurement_pack.raw_measurements_[0];
-		  x_(1)=measurement_pack.raw_measurements_[1];
-		  x_(2)=0;
-		  x_(3)=0;
-		  x_(4)=0;
-		}
-		
-		P_ << 1, 0, 0, 0,0
-				  0, 1, 0, 0,0
-				  0, 0, 10, 0,0
-				  0, 0, 0, 10,0
-				  0,0,0,0,10;
-				  
-		previous_timestamp_=measurement_pack.timestamp_;
-		
-		// done initializing, no need to predict or update
-		is_initialized_ = true;
-		return;
+  if (!is_initialized_) {
+	// first measurement
+	cout << "UKF: " << endl;
+	if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
+	  x_(0)=meas_package.raw_measurements_[0]*cos(meas_package.raw_measurements_[1]);
+	  x_(1)=meas_package.raw_measurements_[0]*sin(meas_package.raw_measurements_[1]);
+	  x_(2)=0;
+	  x_(3)=0;
+	  x_(4)=0;
+	}
+	else if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
+	  x_(0)=meas_package.raw_measurements_[0];
+	  x_(1)=meas_package.raw_measurements_[1];
+	  x_(2)=0;
+	  x_(3)=0;
+	  x_(4)=0;
+	}
+	
+	P_ << 1, 0, 0, 0,0
+			  0, 1, 0, 0,0
+			  0, 0, 10, 0,0
+			  0, 0, 0, 10,0
+			  0,0,0,0,10;
+			  
+	previous_timestamp_=meas_package.timestamp_;
+	
+	// done initializing, no need to predict or update
+	is_initialized_ = true;
+	return;
 	}
 	/*****************************************************************************/
-	float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
+	float dt = (meas_package.timestamp_ - previous_timestamp_) / 1000000.0;
 	Prediction(dt);
 	
-	if ((measurement_pack.sensor_type_ == MeasurementPackage::LIDAR)&&(use_laser_==true)){ // if LIDAR is the incoming msmt
-	UpdateLidar(measurement_pack.raw_measurements_);
+	if ((meas_package.sensor_type_ == MeasurementPackage::LIDAR)&&(use_laser_==true)){ // if LIDAR is the incoming msmt
+	UpdateLidar(meas_package.raw_measurements_);
 	}
-	else if ((measurement_pack.sensor_type_ == MeasurementPackage::RADAR)&&(use_radar_==true)){ // if radar is the incoming msmt
-	UpdateRadar(measurement_pack.raw_measurements_);
+	else if ((meas_package.sensor_type_ == MeasurementPackage::RADAR)&&(use_radar_==true)){ // if radar is the incoming msmt
+	UpdateRadar(meas_package.raw_measurements_);
 	}	
-	previous_timestamp_ = measurement_pack.timestamp_; // latch the previous time stamp before exiting loop
+	previous_timestamp_ = meas_package.timestamp_; // latch the previous time stamp before exiting loop
 }
 
 
