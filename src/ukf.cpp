@@ -17,7 +17,7 @@ UKF::UKF() {
   use_laser_ = true;
 
   // if this is false, radar measurements will be ignored (except during init)
-  use_radar_ = true;
+  use_radar_ = false;
 
   // initial state vector
   x_ = VectorXd(5);
@@ -68,7 +68,6 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	{
 		// first measurement
 		cout << "UKF: " << endl;
-		x_ = VectorXd(5);		
 		if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
 		  x_(0)=measurement_pack.raw_measurements_[0]*cos(measurement_pack.raw_measurements_[1]);
 		  x_(1)=measurement_pack.raw_measurements_[0]*sin(measurement_pack.raw_measurements_[1]);
@@ -84,7 +83,6 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		  x_(4)=0;
 		}
 		
-		P_ = MatrixXd(5, 5);
 		P_ << 1, 0, 0, 0,0
 				  0, 1, 0, 0,0
 				  0, 0, 10, 0,0
@@ -101,13 +99,12 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
 	Prediction(dt);
 	
-	if (measurement_pack.sensor_type_ == MeasurementPackage::LIDAR){ // if LIDAR is the incoming msmt
+	if ((measurement_pack.sensor_type_ == MeasurementPackage::LIDAR)&&(use_laser_==true)){ // if LIDAR is the incoming msmt
 	UpdateLidar(measurement_pack.raw_measurements_);
 	}
-	/*else if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR){ // if radar is the incoming msmt
+	else if ((measurement_pack.sensor_type_ == MeasurementPackage::RADAR)&&(use_radar_==true)){ // if radar is the incoming msmt
 	UpdateRadar(measurement_pack.raw_measurements_);
-	}*/
-	
+	}	
 	previous_timestamp_ = measurement_pack.timestamp_; // latch the previous time stamp before exiting loop
 }
 
@@ -260,6 +257,9 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 	long x_size = x_.size();
 	MatrixXd I = MatrixXd::Identity(x_size, x_size);
 	P_ = (I - K * H_) * P_;
+	
+	cout << "x_ = " << x_ << endl;
+	cout << "P_ = " << P_ << endl;
 }
 
 /**
