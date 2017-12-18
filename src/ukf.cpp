@@ -244,8 +244,8 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
         0, std_laspy_*std_laspy_;
 	
 	VectorXd y = z - z_pred;
-	MatrixXd Ht = H_.transpose();
-	MatrixXd S = H_ * P_ * Ht + R_;
+	MatrixXd Ht = H_laser_.transpose();
+	MatrixXd S = H_laser_ * P_ * Ht + R_;
 	MatrixXd Si = S.inverse();
 	MatrixXd PHt = P_ * Ht;
 	MatrixXd K = PHt * Si;
@@ -254,7 +254,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 	x_ = x_ + (K * y);
 	long x_size = x_.size();
 	MatrixXd I = MatrixXd::Identity(x_size, x_size);
-	P_ = (I - K * H_) * P_;
+	P_ = (I - K * H_laser_) * P_;
 	
 	cout << "x_ = " << x_ << endl;
 	cout << "P_ = " << P_ << endl;
