@@ -99,10 +99,10 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	Prediction(dt);
 	
 	if ((meas_package.sensor_type_ == MeasurementPackage::LASER)&&(use_laser_==true)){ // if LASER is the incoming msmt
-	UpdateLidar(meas_package.raw_measurements_);
+	UpdateLidar(meas_package);
 	}
 	else if ((meas_package.sensor_type_ == MeasurementPackage::RADAR)&&(use_radar_==true)){ // if radar is the incoming msmt
-	UpdateRadar(meas_package.raw_measurements_);
+	UpdateRadar(meas_package);
 	}	
 	previous_timestamp_ = meas_package.timestamp_; // latch the previous time stamp before exiting loop
 }
@@ -233,11 +233,11 @@ void UKF::Prediction(double delta_t) {
 
 void UKF::UpdateLidar(MeasurementPackage meas_package) {
   	H_laser_ = MatrixXd(2, 5);
-	H_laser_<< 1,0,0,0,0
+	H_laser_<< 1,0,0,0,0,
 			0,1,0,0,0;
 	
 	VectorXd z_pred = H_laser_ * x_;
-	VectorXd z = meas_package;
+	VectorXd z = meas_package.raw_measurements_;
 	
 	R_laser_ = MatrixXd(2, 2);
 	R_laser_ << std_laspx_*std_laspx_, 0,
