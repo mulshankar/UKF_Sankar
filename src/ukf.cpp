@@ -98,7 +98,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	float dt = (meas_package.timestamp_ - previous_timestamp_) / 1000000.0;
 	Prediction(dt);
 	
-	if ((meas_package.sensor_type_ == MeasurementPackage::LIDAR)&&(use_laser_==true)){ // if LIDAR is the incoming msmt
+	if ((meas_package.sensor_type_ == MeasurementPackage::LASER)&&(use_laser_==true)){ // if LASER is the incoming msmt
 	UpdateLidar(meas_package.raw_measurements_);
 	}
 	else if ((meas_package.sensor_type_ == MeasurementPackage::RADAR)&&(use_radar_==true)){ // if radar is the incoming msmt
