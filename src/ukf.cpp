@@ -232,20 +232,20 @@ void UKF::Prediction(double delta_t) {
 }
 
 void UKF::UpdateLidar(MeasurementPackage meas_package) {
-  	H_laser_ = MatrixXd(2, 5);
+  	MatrixXd H_laser_ = MatrixXd(2, 5);
 	H_laser_<< 1,0,0,0,0,
 			0,1,0,0,0;
 	
 	VectorXd z_pred = H_laser_ * x_;
 	VectorXd z = meas_package.raw_measurements_;
 	
-	R_laser_ = MatrixXd(2, 2);
+	MatrixXd R_laser_ = MatrixXd(2, 2);
 	R_laser_ << std_laspx_*std_laspx_, 0,
         0, std_laspy_*std_laspy_;
 	
 	VectorXd y = z - z_pred;
 	MatrixXd Ht = H_laser_.transpose();
-	MatrixXd S = H_laser_ * P_ * Ht + R_;
+	MatrixXd S = H_laser_ * P_ * Ht + R_laser_;
 	MatrixXd Si = S.inverse();
 	MatrixXd PHt = P_ * Ht;
 	MatrixXd K = PHt * Si;
