@@ -85,8 +85,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	P_ << 1, 0, 0, 0, 0,
 			  0, 1, 0, 0, 0,
 			  0, 0, 1, 0, 0,
-			  0, 0, 0, 1, 0,
-			  0,0,0,0,1;
+			  0, 0, 0, PI, 0,
+			  0,0,0,0,PI/9;
 			  
 	previous_timestamp_=meas_package.timestamp_;
 	
@@ -280,17 +280,23 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
     double v1 = cos(yaw)*v;
     double v2 = sin(yaw)*v;
-
+	
     // measurement model
-	Zsig(0,i) = sqrt(p_x*p_x + p_y*p_y);                        //r
+	Zsig(0,i) = sqrt(p_x*p_x + p_y*p_y);                        //rho
     
 	if (fabs(p_x) > 0.001) {
 	Zsig(1,i) = atan2(p_y,p_x);                                 //phi
     }
+	else{
+	Zsig(1,i)=0.0;
+	}
 	
 	if(Zsig(0,i)>0.001){
-	Zsig(2,i) = (p_x*v1 + p_y*v2 ) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
+	Zsig(2,i) = (p_x*v1 + p_y*v2 ) / sqrt(p_x*p_x + p_y*p_y);   //rho_dot
 	}
+	else{
+	Zsig(2,i)=0.001;
+	}	
   }
   
 
