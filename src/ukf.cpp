@@ -70,14 +70,14 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
 	  x_(0)=meas_package.raw_measurements_[0]*cos(meas_package.raw_measurements_[1]);
 	  x_(1)=meas_package.raw_measurements_[0]*sin(meas_package.raw_measurements_[1]);
-	  x_(2)=2;
+	  x_(2)=5;
 	  x_(3)=0;
 	  x_(4)=0;
 	}
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
 	  x_(0)=meas_package.raw_measurements_[0];
 	  x_(1)=meas_package.raw_measurements_[1];
-	  x_(2)=2;
+	  x_(2)=5;
 	  x_(3)=0;
 	  x_(4)=0;
 	}
