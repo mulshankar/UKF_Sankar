@@ -17,7 +17,7 @@ UKF::UKF() {
   use_laser_ = true;
 
   // if this is false, radar measurements will be ignored (except during init)
-  use_radar_ = false;
+  use_radar_ = true;
 
   // initial state vector
   x_ = VectorXd(5);
@@ -105,6 +105,10 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	UpdateRadar(meas_package);
 	}	
 	previous_timestamp_ = meas_package.timestamp_; // latch the previous time stamp before exiting loop
+	
+	// ----------- PRINT OUT THE STATE AND COVARIANCE MATRIX ----------//
+	cout << "x_ = " << x_ << endl;
+	cout << "P_ = " << P_ << endl;
 }
 
 
@@ -255,9 +259,6 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 	long x_size = x_.size();
 	MatrixXd I = MatrixXd::Identity(x_size, x_size);
 	P_ = (I - K * H_laser_) * P_;
-	
-	cout << "x_ = " << x_ << endl;
-	cout << "P_ = " << P_ << endl;
 }
 
 /**
