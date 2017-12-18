@@ -1,9 +1,9 @@
-# Extended Kalman Filter for position and velocity tracking of a self-driving car
+# Unscented Kalman Filter for sensor fusion in a self driving car
 ---
 
 The goals of this project are as follows:
 
-* Implement an Extended Kalman Filter to predict vehicle position and velocity by fusing LIDAR and RADAR sensor data
+* Implement an Unscented Kalman Filter to predict a bicycle position and velocity by fusing LIDAR and RADAR sensor data
 * The position estimates must be within 0.11 m accuracy and velocity estimates must be within 0.52 m/s (accuracy is quantified via Root Mean Square Estimates)
 
 [//]: # (Image References)
