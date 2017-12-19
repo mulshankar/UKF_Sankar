@@ -35,6 +35,9 @@ UKF::UKF() {
   n_aug_=7;
   lambda_=3-n_aug_;
   
+  NIS_LASER_ = 0.0;
+  NIS_RADAR_ = 0.0;
+  
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
   std_laspx_ = 0.15;
@@ -259,6 +262,9 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 	long x_size = x_.size();
 	MatrixXd I = MatrixXd::Identity(x_size, x_size);
 	P_ = (I - K * H_laser_) * P_;
+	
+	NIS_LASER_ = y.transpose() * Si * y;
+	NIS_RADAR_ = -1.0;
 }
 
 /**
@@ -362,6 +368,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   //update state mean and covariance matrix
   x_ = x_ + K * z_diff;
   P_ = P_ - K*S*K.transpose();
+  
+  // NIS calculation
+  NIS_RADAR_ = z_diff.transpose() * S.inverse() * z_diff;
+  NIS_LASER_ = -1.0; 
 
 }
 

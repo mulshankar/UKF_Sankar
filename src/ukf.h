@@ -69,6 +69,9 @@ public:
   
   long long previous_timestamp_;
   MatrixXd Xsig_pred;
+  
+  double NIS_LASER_;
+  double NIS_RADAR_;
 
 
   /**
