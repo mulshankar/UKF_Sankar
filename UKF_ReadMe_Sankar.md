@@ -12,7 +12,7 @@ The goals of this project are as follows:
 [image3]: ./figs/SigmaPoints.png
 [image4]: ./figs/Weights.png
 [image5]: ./figs/MeasurementPrediction.png
-[image6]: ./figs/UKFupdate.png
+[image6]: ./figs/UKFupdate1.png
 [image7]: ./figs/NIS.png
 [image8]: ./figs/ChiSquare.png
 
