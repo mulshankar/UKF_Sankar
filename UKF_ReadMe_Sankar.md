@@ -4,7 +4,7 @@
 The goals of this project are as follows:
 
 * Implement an Unscented Kalman Filter to predict a bicycle position and velocity by fusing LIDAR and RADAR sensor data
-* The position estimates must be within 0.11 m accuracy and velocity estimates must be within 0.52 m/s (accuracy is quantified via Root Mean Square Estimates)
+* The position estimates must be within 0.09 m accuracy and velocity estimates must be within 0.3 m/s (accuracy is quantified via Root Mean Square Estimates)
 
 [//]: # (Image References)
 [image1]: ./figs/RadarData.jpg
@@ -15,32 +15,29 @@ The goals of this project are as follows:
 
 **Description of files**
 
-* FusionEFK.cpp is the primary file that initializes the states, the covariance matrix as well as the noise matrices
-* kalman_filter.cpp contains the state transition and measurement models for state update
-* tools. cpp contains the jacobian and RMSE calculation for easy access
+* FusionUFK.cpp is the core file that contains the UKF algorithm
+* main.cpp calls the FusionUKF.cpp with the measurements and communicates with the simulator
+* tools. cpp contains the RMSE calculation for easy access
 
 Remaining files are used "as-is" to interface with simulator and doing background tasks. 
 
 **Algorithm**
 ---
 
-Four primary states were chosen as described below.
+The motion model was captured using a Constant Turn Rate and Velocity magnitude (CTRV) model. The model captures non-linearity in motion better than a constant velocity model. Five primary states were chosen as described below.
 
 * States=		[Position_x,
 		Position_y,
-		Velocity_x,
-		Velocity_y]
+		Velocity,
+		yaw
+		yaw_rate]
 
 * Two sets of measurement data is available:
 
 LIDAR measurements = [ position_x, position_y]
 RADAR measurements = [rho, phi, rho_dot];
 		
-The following steps were completed to implement the EKF algorithm:
-
-* Initialize the state vector, process and measurement noise matrices
-* Calculate time step 'dt' between two measurements
-* Use the state transition model to make a prediction on states
+* The extended Kalman filter uses the Jacobian matrix to linearize non-linear functions. The unscented Kalman filter, on the other hand, does not need to linearize non-linear functions. Instead, the Unscented Kalman filter takes representative points from a Gaussian distribution.
 
 ```sh
 void KalmanFilter::Predict() {
