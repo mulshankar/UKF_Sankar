@@ -88,8 +88,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	P_ << 1, 0, 0, 0, 0,
 			  0, 1, 0, 0, 0,
 			  0, 0, 1, 0, 0,
-			  0, 0, 0, 1, 0,
-			  0,0,0,0,0.5;
+			  0, 0, 0, PI, 0,
+			  0,0,0,0,PI/9;
 			  
 	previous_timestamp_=meas_package.timestamp_;
 	
