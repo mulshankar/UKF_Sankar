@@ -41,25 +41,25 @@ The motion model was captured using a Constant Turn Rate and Velocity Magnitude 
 
 ```sh
 LIDAR measurements = [ position_x, position_y]
-RADAR measurements = [rho, phi, rho_dot];
+RADAR measurements = [rho, phi, rho_dot]
 ```	
 
 * The Extended Kalman filter uses the Jacobian matrix to linearize non-linear functions. The UKF algorithm does not linearize the process or measurement model. The UKF takes representative points from a Gaussian distribution. These points are called "sigma" points. The first step is to create the sigma points as shown below. Lambda is a tuning parameter that distributes the sigma points from the mean state. 
 
+
 ![alt text][image3]
 
-* Once the sigma points are generated, they go through the process model for the prediction step. The noise terms - linear acceleration and yaw acceleration are augmented to the state vector and corresponding sigma points generated. Once all the sigma points go through the prediction step via the CTRV model, the mean state and covariance of a gaussian that approximates all the points is computed. 
+* Once the sigma points are generated, they go through the process model for the prediction step. The noise terms - linear acceleration and yaw acceleration are augmented to the state vector and corresponding sigma points generated. Once all the sigma points go through the prediction step via the CTRV model, the mean state and covariance of a gaussian that approximates all the points is computed. In order to compute the mean state and covaraince, a vector of weights is generated using the formulation shown below. 
 
-* In order to compute the mean state and covaraince, a vector of weights is generated using the formulation shown below. 
 
 ![alt text][image4]
 
 
 * Once the mean state and covariance is predicted, the next step is to perform measurement update
 
-* LIDAR with its linear measurement model does not require the UKF algorithm. Therefore measurement update is done via linear kalman filter.
+* LIDAR with its linear measurement model does not require the UKF measurement update equations. Therefore measurement update for LIDAR is done via linear kalman filter.
 
-* The non-linear measurement model of the radar necessitates the UKF algorithm. The first step for the radar measurement update is to map the predicted sigma points into the measurement space. This is simply done via the radar measurement model as shown below. Similar to the mean state and covariance calculation in the prediction step, a mean predicted measurement is calculated. 
+* The non-linear measurement model of the radar necessitates the UKF algorithm. The first step for the radar measurement update is to map the predicted sigma points into the measurement space. This is simply done via the radar measurement model as shown below. Similar to the mean state and covariance calculation in the prediction step, a mean predicted measurement and covariance is calculated. 
 
 ![alt text][image5]
 
@@ -77,7 +77,7 @@ RADAR measurements = [rho, phi, rho_dot];
 
 **Closure**
 
-An Unscented Kalman Filter was implemented to fuse LIDAR and radar data in conjunction with a non-linear CTRV motion model to estimate position and velocities for a self driving car. The final RMSE values of the positions and velocity estimates of simulator testing are shown below. 
+An Unscented Kalman Filter was implemented to fuse LIDAR and radar data in conjunction with a non-linear CTRV motion model to estimate position and velocities for a self driving car. The final RMSE values of the positions and velocity estimates of simulator testing are shown below. The blue and red dots represent the radar and LIDAR estimates. The green dots are the output of the UKF algorithm.
 
 ![alt text][image2]
 
